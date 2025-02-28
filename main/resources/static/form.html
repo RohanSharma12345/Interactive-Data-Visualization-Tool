@@ -1,0 +1,253 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Department of Consumer Affairs</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #8EC5FC, #E0C3FC); /* Soothing blue to purple gradient */
+            margin: 0;
+            padding: 0;
+        }
+
+        .header {
+            background-color: #667EEA; /* Deep soothing blue */
+            color: white;
+            padding: 15px;
+            text-align: left;
+            font-size: 2em;
+            font-weight: bold;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .content {
+            background-color: #ffffff;
+            padding: 25px;
+            margin: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-section {
+            background-color: #ECE9E6; /* Light gray background */
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #BDBDBD; /* Lighter gray border */
+        }
+
+        .footer {
+            background-color: #667EEA; /* Consistent with the header */
+            color: white;
+            padding: 10px;
+            text-align: center;
+            position: fixed;
+            width: 100%;
+            bottom: 0;
+            font-size: 1em;
+            box-shadow: 0px -4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-section input[type="button"] {
+            padding: 10px 20px;
+            background-color: #6B63FF; /* Soft violet */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            margin-top: 10px;
+            transition: background-color 0.3s ease;
+        }
+
+        .form-section input[type="button"]:hover {
+            background-color: #5755D9; /* Darker violet */
+        }
+
+        .form-section select, .form-section input[type="date"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 100%;
+            box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-section label {
+            font-size: 1.1em;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+
+        .form-section .error {
+            color: red;
+            display: none;
+        }
+
+        .form-section select:focus, .form-section input[type="date"]:focus {
+            outline: none;
+            border-color: #BDBDBD;
+            box-shadow: 0px 0px 8px rgba(181, 181, 181, 0.8);
+        }
+
+        .form-section input[type="button"]:focus {
+            outline: none;
+        }
+    </style>
+
+</head>
+
+<body>
+<div class="header">
+    DEPARTMENT OF CONSUMER AFFAIRS PMS Version 2.0
+</div>
+<form>
+    <div class="content">
+        <div class="form-section">
+            <label for="language">Select Language:</label>
+            <select id="language" name="language">
+                <option value="english">English</option>
+                <option value="hindi">Hindi</option>
+            </select>
+
+            <br><br>
+
+            <label for="stateSelect">State/UTs:</label>
+            <select id="stateSelect" name="stateSelect" required>
+                <option value="">------Select------</option>
+                <option value="Andhra Pradesh">Andhra Pradesh</option>
+                <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                <option value="Assam">Assam</option>
+                <option value="Bihar">Bihar</option>
+                <option value="Chhattisgarh">Chhattisgarh</option>
+                <option value="Goa">Goa</option>
+                <option value="Gujarat">Gujarat</option>
+                <option value="Haryana">Haryana</option>
+                <option value="Himachal Pradesh">Himachal Pradesh</option>
+                <option value="Jharkhand">Jharkhand</option>
+                <option value="Karnataka">Karnataka</option>
+                <option value="Kerala">Kerala</option>
+                <option value="Madhya Pradesh">Madhya Pradesh</option>
+                <option value="Maharashtra">Maharashtra</option>
+                <option value="Manipur">Manipur</option>
+                <option value="Meghalaya">Meghalaya</option>
+                <option value="Mizoram">Mizoram</option>
+                <option value="Nagaland">Nagaland</option>
+                <option value="Odisha">Odisha</option>
+                <option value="Punjab">Punjab</option>
+                <option value="Rajasthan">Rajasthan</option>
+                <option value="Sikkim">Sikkim</option>
+                <option value="Tamil Nadu">Tamil Nadu</option>
+                <option value="Telangana">Telangana</option>
+                <option value="Tripura">Tripura</option>
+                <option value="Uttar Pradesh">Uttar Pradesh</option>
+                <option value="Uttarakhand">Uttarakhand</option>
+                <option value="West Bengal">West Bengal</option>
+                <option value="Andaman and Nicobar Islands">Andaman and Nicobar Islands</option>
+                <option value="Chandigarh">Chandigarh</option>
+                <option value="Dadra and Nagar Haveli and Daman and Diu">Dadra and Nagar Haveli and Daman and Diu</option>
+                <option value="Lakshadweep">Lakshadweep</option>
+                <option value="Delhi">Delhi</option>
+                <option value="Puducherry">Puducherry</option>
+                <option value="Jammu and Kashmir">Jammu and Kashmir</option>
+                <option value="Ladakh">Ladakh</option>
+            </select>
+
+            <br><br>
+
+            <label for="commoditySelect">Commodity:</label>
+            <select id="commoditySelect" name="commoditySelect" required>
+                <option value="">--Select Commodity--</option>
+                <option value="rice">Rice</option>
+                <option value="wheat">Wheat</option>
+                <option value="atta">Atta</option>
+                <option value="gramDal">Gram Dal</option>
+                <option value="turArharDal">Tur Arhar Dal</option>
+                <option value="uradDal">Urad Dal</option>
+                <option value="moongDal">Moong Dal</option>
+                <option value="masoorDal">Masoor Dal</option>
+                <option value="sugar">Sugar</option>
+                <option value="milk">Milk</option>
+                <option value="groundnutOil">Groundnut Oil</option>
+                <option value="mustardOil">Mustard Oil</option>
+                <option value="vanaspati">Vanaspati</option>
+                <option value="soyaOil">Soya Oil</option>
+                <option value="sunflowerOil">Sunflower Oil</option>
+                <option value="palmOil">Palm Oil</option>
+                <option value="gur">Gur</option>
+                <option value="teaLoose">Tea Loose</option>
+                <option value="saltPack">Salt Pack</option>
+                <option value="potato">Potato</option>
+                <option value="onion">Onion</option>
+                <option value="tomato">Tomato</option>
+            </select>
+            <span class="error" id="commodity-error-message">Please select a commodity.</span>
+
+            <br><br>
+
+            <label for="date">Date:</label>
+            <input type="date" id="date" name="date" required>
+            <span class="error" id="date-error-message">Please select a date.</span>
+            <br><br>
+        </div>
+
+        <div class="content">
+            <p><strong>Disclaimer:</strong> Price data reported by State/UTs on Saturday, Sunday, and holidays are subjected to verification on the next working day. Until then, the figures should be treated as provisional.</p>
+        </div>
+    </div>
+
+    <div class="footer">
+        Designed and Developed By: National Informatics Centre (NIC) &nbsp;&nbsp;|&nbsp;&nbsp; Visitor Count:
+        13107328
+    </div>
+
+</form>
+
+<input type="button" id="getDataBtn" disabled value="Get Data">
+
+<script>
+    // Function to toggle the Get Data button state
+    function toggleGetDataButton() {
+        var stateSelect = document.getElementById("stateSelect").value;
+        var commoditySelect = document.getElementById("commoditySelect").value;
+        var dateInput = document.getElementById("date").value;
+        var getDataBtn = document.getElementById("getDataBtn");
+
+        if (stateSelect && commoditySelect && dateInput) {
+            getDataBtn.disabled = false;
+            document.getElementById("commodity-error-message").style.display = "none";
+            document.getElementById("date-error-message").style.display = "none";
+        } else {
+            getDataBtn.disabled = true;
+            if (!commoditySelect) document.getElementById("commodity-error-message").style.display = "block";
+            else document.getElementById("commodity-error-message").style.display = "none";
+
+            if (!dateInput) document.getElementById("date-error-message").style.display = "block";
+            else document.getElementById("date-error-message").style.display = "none";
+        }
+    }
+
+    document.getElementById("stateSelect").addEventListener("change", toggleGetDataButton);
+    document.getElementById("commoditySelect").addEventListener("change", toggleGetDataButton);
+    document.getElementById("date").addEventListener("input", toggleGetDataButton);
+
+    // Redirect only when the button is enabled and clicked
+    document.getElementById("getDataBtn").addEventListener("click", function () {
+        var stateSelect = document.getElementById("stateSelect").value;
+        var commoditySelect = document.getElementById("commoditySelect").value;
+        var dateInput = document.getElementById("date").value;
+
+        if (stateSelect && commoditySelect && dateInput) {
+            // Redirect to the graph page, passing the state, commodity, and date as query parameters
+            window.location.href = "/graph.html?state=" + stateSelect + "&commodity=" + commoditySelect + "&date=" + dateInput;
+        }
+    });
+</script>
+
+</body>
+
+</html>

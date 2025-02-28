@@ -1,0 +1,2295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Commodities Price Chart and Comparison</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        body {
+            background: linear-gradient(135deg, #f9a8d4 0%, #fbcfe8 50%, #a7f3d0 100%);
+            font-family: Arial, sans-serif;
+            color: #333;
+            text-align: center;
+            padding: 20px;
+        }
+
+        h1, h2, h3 {
+            font-family: 'Arial Black', sans-serif;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        canvas {
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+        }
+
+        select, button {
+            padding: 10px;
+            font-size: 16px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s, background-color 0.2s;
+        }
+
+        select:hover, button:hover {
+            transform: scale(1.05);
+            background-color: #bde0fe;
+        }
+
+        button {
+            background-color: #34d399;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:active {
+            background-color: #059669;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Commodities Price Visualization</h1>
+<canvas id="myChart" width="400" height="200"></canvas>
+
+
+<canvas id="selectedChart" width="400" height="200"></canvas>
+
+<h3>Commodity Price Trends for All States</h3>
+<canvas id="priceChart"></canvas>
+
+<h2>Compare Commodity Trends Across States</h2>
+<p>Select Commodities:</p>
+<select id="commodity1">
+    <option value="rice">Rice</option>
+    <option value="wheat">Wheat</option>
+    <option value="atta">Atta</option>
+    <option value="gramDal">Gram Dal</option>
+    <option value="turArharDal">Tur Arhar Dal</option>
+    <option value="uradDal">Urad Dal</option>
+    <option value="moongDal">Moong Dal</option>
+    <option value="masoorDal">Masoor Dal</option>
+    <option value="sugar">Sugar</option>
+    <option value="milk">Milk</option>
+    <option value="groundnutOil">Groundnut Oil</option>
+    <option value="mustardOil">Mustard Oil</option>
+    <option value="vanaspati">Vanaspati</option>
+    <option value="soyaOil">Soya Oil</option>
+    <option value="sunflowerOil">Sunflower Oil</option>
+    <option value="palmOil">Palm Oil</option>
+    <option value="gur">Gur</option>
+    <option value="teaLoose">Tea Loose</option>
+    <option value="saltPack">Salt Pack</option>
+    <option value="potato">Potato</option>
+    <option value="onion">Onion</option>
+    <option value="tomato">Tomato</option>
+</select>
+
+<select id="commodity2">
+    <option value="rice">Rice</option>
+    <option value="wheat">Wheat</option>
+    <option value="atta">Atta</option>
+    <option value="gramDal">Gram Dal</option>
+    <option value="turArharDal">Tur Arhar Dal</option>
+    <option value="uradDal">Urad Dal</option>
+    <option value="moongDal">Moong Dal</option>
+    <option value="masoorDal">Masoor Dal</option>
+    <option value="sugar">Sugar</option>
+    <option value="milk">Milk</option>
+    <option value="groundnutOil">Groundnut Oil</option>
+    <option value="mustardOil">Mustard Oil</option>
+    <option value="vanaspati">Vanaspati</option>
+    <option value="soyaOil">Soya Oil</option>
+    <option value="sunflowerOil">Sunflower Oil</option>
+    <option value="palmOil">Palm Oil</option>
+    <option value="gur">Gur</option>
+    <option value="teaLoose">Tea Loose</option>
+    <option value="saltPack">Salt Pack</option>
+    <option value="potato">Potato</option>
+    <option value="onion">Onion</option>
+    <option value="tomato">Tomato</option>
+</select>
+
+<button id="compareBtn">Compare</button>
+<canvas id="comparisonChart" width="400" height="200"></canvas>
+
+<p>Select States:</p>
+<select id="state1">
+
+    <option value="AP">Andhra Pradesh</option>
+    <option value="AR">Arunachal Pradesh</option>
+    <option value="AS">Assam</option>
+    <option value="BR">Bihar</option>
+    <option value="CT">Chhattisgarh</option>
+    <option value="GA">Goa</option>
+    <option value="GJ">Gujarat</option>
+    <option value="HR">Haryana</option>
+    <option value="HP">Himachal Pradesh</option>
+    <option value="JK">Jammu and Kashmir</option>
+    <option value="JH">Jharkhand</option>
+    <option value="KA">Karnataka</option>
+    <option value="KL">Kerala</option>
+    <option value="MP">Madhya Pradesh</option>
+    <option value="MH">Maharashtra</option>
+    <option value="MN">Manipur</option>
+    <option value="ML">Meghalaya</option>
+    <option value="MZ">Mizoram</option>
+    <option value="NL">Nagaland</option>
+    <option value="OR">Odisha</option>
+    <option value="PB">Punjab</option>
+    <option value="RJ">Rajasthan</option>
+    <option value="SK">Sikkim</option>
+    <option value="TN">Tamil Nadu</option>
+    <option value="TG">Telangana</option>
+    <option value="TR">Tripura</option>
+    <option value="UP">Uttar Pradesh</option>
+    <option value="UT">Uttarakhand</option>
+    <option value="WB">West Bengal</option>
+    <option value="AN">Andaman and Nicobar Islands</option>
+    <option value="CH">Chandigarh</option>
+    <option value="DH">Dadra and Nagar Haveli and Daman and Diu</option>
+    <option value="DL">Delhi</option>
+    <option value="LD">Lakshadweep</option>
+    <option value="LA">Ladakh</option>
+    <option value="PY">Puducherry</option>
+</select>
+
+
+
+<select id="state2">
+
+    <option value="AP">Andhra Pradesh</option>
+    <option value="AR">Arunachal Pradesh</option>
+    <option value="AS">Assam</option>
+    <option value="BR">Bihar</option>
+    <option value="CT">Chhattisgarh</option>
+    <option value="GA">Goa</option>
+    <option value="GJ">Gujarat</option>
+    <option value="HR">Haryana</option>
+    <option value="HP">Himachal Pradesh</option>
+    <option value="JK">Jammu and Kashmir</option>
+    <option value="JH">Jharkhand</option>
+    <option value="KA">Karnataka</option>
+    <option value="KL">Kerala</option>
+    <option value="MP">Madhya Pradesh</option>
+    <option value="MH">Maharashtra</option>
+    <option value="MN">Manipur</option>
+    <option value="ML">Meghalaya</option>
+    <option value="MZ">Mizoram</option>
+    <option value="NL">Nagaland</option>
+    <option value="OR">Odisha</option>
+    <option value="PB">Punjab</option>
+    <option value="RJ">Rajasthan</option>
+    <option value="SK">Sikkim</option>
+    <option value="TN">Tamil Nadu</option>
+    <option value="TG">Telangana</option>
+    <option value="TR">Tripura</option>
+    <option value="UP">Uttar Pradesh</option>
+    <option value="UT">Uttarakhand</option>
+    <option value="WB">West Bengal</option>
+    <option value="AN">Andaman and Nicobar Islands</option>
+    <option value="CH">Chandigarh</option>
+    <option value="DH">Dadra and Nagar Haveli and Daman and Diu</option>
+    <option value="DL">Delhi</option>
+    <option value="LD">Lakshadweep</option>
+    <option value="LA">Ladakh</option>
+    <option value="PY">Puducherry</option>
+</select>
+
+
+<p>Select Commodity:</p>
+<select id="commodity">
+<option value="rice">Rice</option>
+<option value="wheat">Wheat</option>
+<option value="atta">Atta</option>
+<option value="gramDal">Gram Dal</option>
+<option value="turArharDal">Tur Arhar Dal</option>
+<option value="uradDal">Urad Dal</option>
+<option value="moongDal">Moong Dal</option>
+<option value="masoorDal">Masoor Dal</option>
+<option value="sugar">Sugar</option>
+<option value="milk">Milk</option>
+<option value="groundnutOil">Groundnut Oil</option>
+<option value="mustardOil">Mustard Oil</option>
+<option value="vanaspati">Vanaspati</option>
+<option value="soyaOil">Soya Oil</option>
+<option value="sunflowerOil">Sunflower Oil</option>
+<option value="palmOil">Palm Oil</option>
+<option value="gur">Gur</option>
+<option value="teaLoose">Tea Loose</option>
+<option value="saltPack">Salt Pack</option>
+<option value="potato">Potato</option>
+<option value="onion">Onion</option>
+<option value="tomato">Tomato</option>
+</select>
+
+<button id="compareStatesBtn">Compare States</button>
+
+<canvas id="statesComparisonChart" width="400" height="200"></canvas>
+
+<script>
+    // Function to extract URL parameters
+    function getQueryParam(param) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(param);
+    }
+
+    // Get the selected state and commodity from the URL parameters
+    const selectedState = getQueryParam('state');
+    const selectedCommodity = getQueryParam('commodity');
+    const selectedDate = getQueryParam('date'); // Optional, if needed
+
+    // Function to create a chart for the selected state and commodity
+    function createSelectedCommodityChart(data, selectedState, selectedCommodity) {
+        // Filter the data for the selected state
+        const filteredData = data.filter(item => item.state === selectedState);
+
+        // Extract the price for the selected commodity
+        const selectedCommodityPrice = filteredData.map(item => item[selectedCommodity]);
+
+        // Create the chart using Chart.js
+        const ctx = document.getElementById('selectedChart').getContext('2d');
+        const selectedChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: [selectedState], // Show the selected state on the X-axis
+                datasets: [{
+                    label: selectedCommodity,
+                    data: selectedCommodityPrice,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1,
+                     fill: false
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Sample data - replace this with your actual data fetching logic
+    const sampleData = [
+   {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Andaman and Nicobar",
+    "rice": 51.67,
+    "wheat": null,
+    "atta": 68.33,
+    "gramDal": 101,
+    "turArharDal": 184,
+    "uradDal": 160.33,
+    "moongDal": 137.67,
+    "masoorDal": 102.33,
+    "sugar": 54,
+    "milk": 73,
+    "groundnutOil": 234.5,
+    "mustardOil": 172.67,
+    "vanaspati": 165,
+    "soyaOil": null,
+    "sunflowerOil": 130.67,
+    "palmOil": 113,
+    "gur": 78,
+    "teaLoose": 308.33,
+    "saltPack": 20.33,
+    "potato": 61.67,
+    "onion": 66.67,
+    "tomato": 112.67
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Andhra Pradesh",
+    "rice": 53,
+    "wheat": 40.4,
+    "atta": 42.6,
+    "gramDal": 88.4,
+    "turArharDal": 171,
+    "uradDal": 128,
+    "moongDal": 120.2,
+    "masoorDal": 91,
+    "sugar": 43.4,
+    "milk": 58.6,
+    "groundnutOil": 166.8,
+    "mustardOil": 159.25,
+    "vanaspati": 110.2,
+    "soyaOil": 129.5,
+    "sunflowerOil": 114.8,
+    "palmOil": 92.6,
+    "gur": 56.8,
+    "teaLoose": 266.25,
+    "saltPack": 21.5,
+    "potato": 40.2,
+    "onion": 41.8,
+    "tomato": 35.4
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Arunachal Pradesh",
+    "rice": 44,
+    "wheat": null,
+    "atta": 42.75,
+    "gramDal": 102.25,
+    "turArharDal": 178.75,
+    "uradDal": 132.5,
+    "moongDal": 100.75,
+    "masoorDal": 91.75,
+    "sugar": 53.75,
+    "milk": 74.5,
+    "groundnutOil": 167,
+    "mustardOil": 167.67,
+    "vanaspati": 124,
+    "soyaOil": 138,
+    "sunflowerOil": 83,
+    "palmOil": 313.33,
+    "gur": 19.5,
+    "teaLoose": 41,
+    "saltPack": 54.33,
+    "potato": 76.33,
+    "onion": 50,
+    "tomato": 76.33
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Assam",
+    "rice": 43.17,
+    "wheat": 32.33,
+    "atta": 36.58,
+    "gramDal": 93,
+    "turArharDal": 160,
+    "uradDal": 121.75,
+    "moongDal": 113.2,
+    "masoorDal": 113.83,
+    "sugar": 48.5,
+    "milk": 77.2,
+    "groundnutOil": 151,
+    "mustardOil": 150.83,
+    "vanaspati": 141,
+    "soyaOil": 132.5,
+    "sunflowerOil": 149.5,
+    "palmOil": 113.5,
+    "gur": 60.67,
+    "teaLoose": 226.25,
+    "saltPack": 137.67,
+    "potato": 121.4,
+    "onion": 133.32,
+    "tomato": 149.5
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Bihar",
+    "rice": 37.34,
+    "wheat": 27.83,
+    "atta": 33.43,
+    "gramDal": 83.29,
+    "turArharDal": 160.11,
+    "uradDal": 121.71,
+    "moongDal": 114.8,
+    "masoorDal": 79.86,
+    "sugar": 44.44,
+    "milk": 56.16,
+    "groundnutOil": 180,
+    "mustardOil": 136.97,
+    "vanaspati": 120.44,
+    "soyaOil": 123.97,
+    "sunflowerOil": 104.88,
+    "palmOil": 120.44,
+    "gur": 85.71,
+    "teaLoose": 272.06,
+    "saltPack": 22.33,
+    "potato": 32.97,
+    "onion": 39.26,
+    "tomato": 66.55
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Chandigarh",
+    "rice": 45,
+    "wheat": 32,
+    "atta": 36,
+    "gramDal": 88,
+    "turArharDal": 168,
+    "uradDal": 117,
+    "moongDal": 98,
+    "masoorDal": 94,
+    "sugar": 45,
+    "milk": 54,
+    "groundnutOil": 123,
+    "mustardOil": 141,
+    "vanaspati": 126,
+    "soyaOil": 123,
+    "sunflowerOil": 100,
+    "palmOil": 94,
+    "gur": 54,
+    "teaLoose": 278,
+    "saltPack": 23,
+    "potato": 39,
+    "onion": 45,
+    "tomato": 75
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Chhattisgarh",
+    "rice": 38.53,
+    "wheat": 33.33,
+    "atta": 39.29,
+    "gramDal": 94.5,
+    "turArharDal": 151.4,
+    "uradDal": 108,
+    "moongDal": 103.14,
+    "masoorDal": 101.17,
+    "sugar": 48,
+    "milk": 48.33,
+    "groundnutOil": 145.88,
+    "mustardOil": 114.25,
+    "vanaspati": 117.43,
+    "soyaOil": 125.14,
+    "sunflowerOil": 101.17,
+    "palmOil": 115.94,
+    "gur": 49.75,
+    "teaLoose": 236.38,
+    "saltPack": 21.38,
+    "potato": 31.89,
+    "onion": 30.4,
+    "tomato": 43.88
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Delhi",
+    "rice": 40,
+    "wheat": 30,
+    "atta": 32,
+    "gramDal": 90,
+    "turArharDal": 175,
+    "uradDal": 150,
+    "moongDal": 130,
+    "masoorDal": 90,
+    "sugar": 44,
+    "milk": 56,
+    "groundnutOil": 207,
+    "mustardOil": 150,
+    "vanaspati": 128,
+    "soyaOil": 130,
+    "sunflowerOil": 141,
+    "palmOil": 102,
+    "gur": 60,
+    "teaLoose": 245,
+    "saltPack": 26,
+    "potato": 40,
+    "onion": 50,
+    "tomato": 60
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "DNH and DD",
+    "rice": 49.67,
+    "wheat": 41.67,
+    "atta": 37.33,
+    "gramDal": 94,
+    "turArharDal": 165.67,
+    "uradDal": 134,
+    "moongDal": 112.33,
+    "masoorDal": 62,
+    "sugar": 47.67,
+    "milk": 65.67,
+    "groundnutOil": 202,
+    "mustardOil": 164.67,
+    "vanaspati": 127,
+    "soyaOil": 135.33,
+    "sunflowerOil": 134,
+    "palmOil": 114,
+    "gur": 60,
+    "teaLoose": 273.67,
+    "saltPack": 33.33,
+    "potato": 33.33,
+    "onion": 40,
+    "tomato": 58.33
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Goa",
+    "rice": 52.5,
+    "wheat": 50,
+    "atta": 47.5,
+    "gramDal": 94.5,
+    "turArharDal": 182.5,
+    "uradDal": 152,
+    "moongDal": 118.5,
+    "masoorDal": 98,
+    "sugar": 50.5,
+    "milk": 61.5,
+    "groundnutOil": 204.5,
+    "mustardOil": 163,
+    "vanaspati": 140,
+    "soyaOil": 140,
+    "sunflowerOil": 118.5,
+    "palmOil": 98,
+    "gur": 60.5,
+    "teaLoose": 329,
+    "saltPack": 26.67,
+    "potato": 47,
+    "onion": 47,
+    "tomato": 40
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Gujarat",
+    "rice": 41,
+    "wheat": 37.71,
+    "atta": 39.71,
+    "gramDal": 92.29,
+    "turArharDal": 168,
+    "uradDal": 140,
+    "moongDal": 124.71,
+    "masoorDal": 100.71,
+    "sugar": 43.2,
+    "milk": 61.6,
+    "groundnutOil": 178,
+    "mustardOil": 146.29,
+    "vanaspati": 127,
+    "soyaOil": 125.71,
+    "sunflowerOil": 115,
+    "palmOil": 124.67,
+    "gur": 53.4,
+    "teaLoose": 253.4,
+    "saltPack": 15,
+    "potato": 36.43,
+    "onion": 42,
+    "tomato": 62.57
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Haryana",
+    "rice": 36.67,
+    "wheat": 26.33,
+    "atta": 39.5,
+    "gramDal": 91.67,
+    "turArharDal": 164.33,
+    "uradDal": 136,
+    "moongDal": 119.33,
+    "masoorDal": 96.67,
+    "sugar": 50,
+    "milk": 53.33,
+    "groundnutOil": 151.33,
+    "mustardOil": 136,
+    "vanaspati": 119.33,
+    "soyaOil": 122,
+    "sunflowerOil": 127,
+    "palmOil": 120.33,
+    "gur": 54.33,
+    "teaLoose": 253.67,
+    "saltPack": 24.67,
+    "potato": 34.33,
+    "onion": 34.33,
+    "tomato": 43.33
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Himachal Pradesh",
+    "rice": 41.17,
+    "wheat": 22.33,
+    "atta": 33.67,
+    "gramDal": 91.33,
+    "turArharDal": 177.5,
+    "uradDal": 138.42,
+    "moongDal": 116.67,
+    "masoorDal": 90.92,
+    "sugar": 46.33,
+    "milk": 52.75,
+    "groundnutOil": 219.5,
+    "mustardOil": 164.67,
+    "vanaspati": 137.92,
+    "soyaOil": 127,
+    "sunflowerOil": 112.5,
+    "palmOil": 140,
+    "gur": 50.25,
+    "teaLoose": 269.75,
+    "saltPack": 27.67,
+    "potato": 37.33,
+    "onion": 48.25,
+    "tomato": 55.92
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Jammu and Kashmir",
+    "rice": 47,
+    "wheat": 32.5,
+    "atta": 39.6,
+    "gramDal": 92,
+    "turArharDal": 180.5,
+    "uradDal": 130.67,
+    "moongDal": 123,
+    "masoorDal": 114.33,
+    "sugar": 49.4,
+    "milk": 50.6,
+    "groundnutOil": 144.4,
+    "mustardOil": 132,
+    "vanaspati": 126.8,
+    "soyaOil": 137.5,
+    "sunflowerOil": 114.33,
+    "palmOil": 124.67,
+    "gur": 50.6,
+    "teaLoose": 306.6,
+    "saltPack": 28,
+    "potato": 36.6,
+    "onion": 45.6,
+    "tomato": 59.6
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Jharkhand",
+    "rice": 39.5,
+    "wheat": 30.71,
+    "atta": 31.4,
+    "gramDal": 85.44,
+    "turArharDal": 166.12,
+    "uradDal": 134.57,
+    "moongDal": 101.93,
+    "masoorDal": 82,
+    "sugar": 43.58,
+    "milk": 59.53,
+    "groundnutOil": 179,
+    "mustardOil": 143.57,
+    "vanaspati": 101.75,
+    "soyaOil": 143.57,
+    "sunflowerOil": 125.53,
+    "palmOil": 122.3,
+    "gur": 55.25,
+    "teaLoose": 234.75,
+    "saltPack": 24.2,
+    "potato": 34.44,
+    "onion": 41.06,
+    "tomato": 55.94
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Karnataka",
+    "rice": 54.74,
+    "wheat": 41.97,
+    "atta": 45.67,
+    "gramDal": 97.8,
+    "turArharDal": 166.65,
+    "uradDal": 128.5,
+    "moongDal": 116,
+    "masoorDal": 99.17,
+    "sugar": 43.17,
+    "milk": 52.33,
+    "groundnutOil": 176.18,
+    "mustardOil": 156.66,
+    "vanaspati": 119,
+    "soyaOil": 128.57,
+    "sunflowerOil": 116.95,
+    "palmOil": 97.03,
+    "gur": 51.43,
+    "teaLoose": 243.57,
+    "saltPack": 18.85,
+    "potato": 42.13,
+    "onion": 40.43,
+    "tomato": 38.94
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Kerala",
+    "rice": 50.25,
+    "wheat": 47.5,
+    "atta": 47.25,
+    "gramDal": 96.67,
+    "turArharDal": 148.53,
+    "uradDal": 116.95,
+    "moongDal": 119.9,
+    "masoorDal": 94.57,
+    "sugar": 51.33,
+    "milk": 43.11,
+    "groundnutOil": 176.31,
+    "mustardOil": 146.66,
+    "vanaspati": 118.57,
+    "soyaOil": 114.31,
+    "sunflowerOil": 145.87,
+    "palmOil": 119.9,
+    "gur": 54.75,
+    "teaLoose": 233.14,
+    "saltPack": 18.5,
+    "potato": 42.13,
+    "onion": 34.36,
+    "tomato": 34.85
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Madhya Pradesh",
+    "rice": 38.44,
+    "wheat": 28.9,
+    "atta": 33.25,
+    "gramDal": 85.46,
+    "turArharDal": 164.94,
+    "uradDal": 137.5,
+    "moongDal": 129.68,
+    "masoorDal": 87.83,
+    "sugar": 42.98,
+    "milk": 52.33,
+    "groundnutOil": 162.94,
+    "mustardOil": 134.19,
+    "vanaspati": 106.5,
+    "soyaOil": 128.17,
+    "sunflowerOil": 110.38,
+    "palmOil": 108.92,
+    "gur": 54.5,
+    "teaLoose": 248.38,
+    "saltPack": 22.58,
+    "potato": 33.75,
+    "onion": 36.79,
+    "tomato": 42.46
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Maharashtra",
+    "rice": 45.6,
+    "wheat": 39.86,
+    "atta": 42.71,
+    "gramDal": 92.86,
+    "turArharDal": 169.29,
+    "uradDal": 138.29,
+    "moongDal": 119.86,
+    "masoorDal": 91.14,
+    "sugar": 44.14,
+    "milk": 56.71,
+    "groundnutOil": 177.29,
+    "mustardOil": 146.43,
+    "vanaspati": 122,
+    "soyaOil": 122.14,
+    "sunflowerOil": 127.71,
+    "palmOil": 122.14,
+    "gur": 61.43,
+    "teaLoose": 254.71,
+    "saltPack": 26.14,
+    "potato": 38.29,
+    "onion": 37.71,
+    "tomato": 43.86
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Manipur",
+    "rice": 38.71,
+    "wheat": 31.83,
+    "atta": 38.71,
+    "gramDal": 85.29,
+    "turArharDal": 159.14,
+    "uradDal": 120,
+    "moongDal": 118,
+    "masoorDal": 77.43,
+    "sugar": 42.86,
+    "milk": 54.14,
+    "groundnutOil": 156,
+    "mustardOil": 134.29,
+    "vanaspati": 107.14,
+    "soyaOil": 125.71,
+    "sunflowerOil": 106,
+    "palmOil": 121.14,
+    "gur": 50.86,
+    "teaLoose": 224,
+    "saltPack": 21.71,
+    "potato": 34.14,
+    "onion": 32.71,
+    "tomato": 42.71
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Meghalaya",
+    "rice": 40.89,
+    "wheat": 36.33,
+    "atta": 41.22,
+    "gramDal": 87.67,
+    "turArharDal": 162.22,
+    "uradDal": 124,
+    "moongDal": 112.33,
+    "masoorDal": 92.22,
+    "sugar": 45.33,
+    "milk": 63.33,
+    "groundnutOil": 157.11,
+    "mustardOil": 143.78,
+    "vanaspati": 121.56,
+    "soyaOil": 124.44,
+    "sunflowerOil": 116.89,
+    "palmOil": 130,
+    "gur": 59.56,
+    "teaLoose": 263.67,
+    "saltPack": 25.67,
+    "potato": 35.22,
+    "onion": 38.56,
+    "tomato": 53.22
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Mizoram",
+    "rice": 41.78,
+    "wheat": 34.67,
+    "atta": 39.22,
+    "gramDal": 91.33,
+    "turArharDal": 164,
+    "uradDal": 131.33,
+    "moongDal": 115.67,
+    "masoorDal": 83.56,
+    "sugar": 45.56,
+    "milk": 65.67,
+    "groundnutOil": 181,
+    "mustardOil": 144.33,
+    "vanaspati": 116.78,
+    "soyaOil": 128.67,
+    "sunflowerOil": 122.22,
+    "palmOil": 128.67,
+    "gur": 54.67,
+    "teaLoose": 238.78,
+    "saltPack": 26.56,
+    "potato": 38.56,
+    "onion": 38.11,
+    "tomato": 43.11
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Nagaland",
+    "rice": 38.78,
+    "wheat": 30.56,
+    "atta": 33.89,
+    "gramDal": 83.22,
+    "turArharDal": 160.56,
+    "uradDal": 120.11,
+    "moongDal": 114.78,
+    "masoorDal": 79.22,
+    "sugar": 43.67,
+    "milk": 54.56,
+    "groundnutOil": 150.89,
+    "mustardOil": 131.44,
+    "vanaspati": 112.33,
+    "soyaOil": 123.22,
+    "sunflowerOil": 108.89,
+    "palmOil": 118.33,
+    "gur": 54.33,
+    "teaLoose": 220.89,
+    "saltPack": 22.89,
+    "potato": 33.78,
+    "onion": 33.33,
+    "tomato": 39.67
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Odisha",
+    "rice": 35.8,
+    "wheat": 27.3,
+    "atta": 31.2,
+    "gramDal": 87.9,
+    "turArharDal": 160.5,
+    "uradDal": 121.7,
+    "moongDal": 110.2,
+    "masoorDal": 88.9,
+    "sugar": 43.8,
+    "milk": 47.9,
+    "groundnutOil": 146.4,
+    "mustardOil": 135.9,
+    "vanaspati": 101.8,
+    "soyaOil": 114.8,
+    "sunflowerOil": 110.2,
+    "palmOil": 100.4,
+    "gur": 54.3,
+    "teaLoose": 210.4,
+    "saltPack": 18.7,
+    "potato": 29.9,
+    "onion": 31.2,
+    "tomato": 34.9
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Puducherry",
+    "rice": 49.67,
+    "wheat": 43,
+    "atta": 41.33,
+    "gramDal": 92,
+    "turArharDal": 166.33,
+    "uradDal": 129,
+    "moongDal": 117.67,
+    "masoorDal": 89.67,
+    "sugar": 44.67,
+    "milk": 55.67,
+    "groundnutOil": 175.33,
+    "mustardOil": 160,
+    "vanaspati": 115,
+    "soyaOil": 124.67,
+    "sunflowerOil": 114,
+    "palmOil": 109,
+    "gur": 53,
+    "teaLoose": 256.33,
+    "saltPack": 23,
+    "potato": 40,
+    "onion": 41.67,
+    "tomato": 47.67
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Punjab",
+    "rice": 37.75,
+    "wheat": 25,
+    "atta": 33,
+    "gramDal": 85.25,
+    "turArharDal": 162.75,
+    "uradDal": 134.25,
+    "moongDal": 114.25,
+    "masoorDal": 89.25,
+    "sugar": 43.75,
+    "milk": 55,
+    "groundnutOil": 133.75,
+    "mustardOil": 140.5,
+    "vanaspati": 122,
+    "soyaOil": 122,
+    "sunflowerOil": 120.5,
+    "palmOil": 110,
+    "gur": 47,
+    "teaLoose": 256.25,
+    "saltPack": 22.5,
+    "potato": 32.5,
+    "onion": 35.75,
+    "tomato": 42
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Rajasthan",
+    "rice": 40.94,
+    "wheat": 26.25,
+    "atta": 32.75,
+    "gramDal": 89.13,
+    "turArharDal": 163.44,
+    "uradDal": 130.19,
+    "moongDal": 122.13,
+    "masoorDal": 86.63,
+    "sugar": 44.13,
+    "milk": 53.75,
+    "groundnutOil": 170.75,
+    "mustardOil": 141.81,
+    "vanaspati": 119.13,
+    "soyaOil": 124.38,
+    "sunflowerOil": 110.88,
+    "palmOil": 110.63,
+    "gur": 57.19,
+    "teaLoose": 254.06,
+    "saltPack": 21.5,
+    "potato": 34.38,
+    "onion": 34.69,
+    "tomato": 46.38
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Sikkim",
+    "rice": 35.9,
+    "wheat": 25.5,
+    "atta": 36.3,
+    "gramDal": 85,
+    "turArharDal": 157.2,
+    "uradDal": 130.5,
+    "moongDal": 115.5,
+    "masoorDal": 88.9,
+    "sugar": 42.3,
+    "milk": 58.5,
+    "groundnutOil": 150,
+    "mustardOil": 139.4,
+    "vanaspati": 120.5,
+    "soyaOil": 129.3,
+    "sunflowerOil": 117.5,
+    "palmOil": 115.5,
+    "gur": 47.3,
+    "teaLoose": 242.1,
+    "saltPack": 25.7,
+    "potato": 36.7,
+    "onion": 33.9,
+    "tomato": 42.9
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Tamil Nadu",
+    "rice": 41.88,
+    "wheat": 43.75,
+    "atta": 45.13,
+    "gramDal": 94.38,
+    "turArharDal": 164.75,
+    "uradDal": 124.75,
+    "moongDal": 117.38,
+    "masoorDal": 100.13,
+    "sugar": 44.63,
+    "milk": 51.88,
+    "groundnutOil": 172.25,
+    "mustardOil": 149.63,
+    "vanaspati": 111.25,
+    "soyaOil": 124,
+    "sunflowerOil": 123.88,
+    "palmOil": 108.13,
+    "gur": 49.25,
+    "teaLoose": 243.25,
+    "saltPack": 18.75,
+    "potato": 38.25,
+    "onion": 41.25,
+    "tomato": 35.38
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Telangana",
+    "rice": 48.27,
+    "wheat": 45.5,
+    "atta": 44.83,
+    "gramDal": 92.83,
+    "turArharDal": 156.5,
+    "uradDal": 120.5,
+    "moongDal": 117.5,
+    "masoorDal": 99.83,
+    "sugar": 45.5,
+    "milk": 57.17,
+    "groundnutOil": 187.67,
+    "mustardOil": 162,
+    "vanaspati": 114.83,
+    "soyaOil": 122,
+    "sunflowerOil": 114.5,
+    "palmOil": 105.5,
+    "gur": 51,
+    "teaLoose": 240.67,
+    "saltPack": 22,
+    "potato": 39.67,
+    "onion": 43.5,
+    "tomato": 38.5
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Tripura",
+    "rice": 38.22,
+    "wheat": 33.67,
+    "atta": 39,
+    "gramDal": 84.44,
+    "turArharDal": 162.11,
+    "uradDal": 121.67,
+    "moongDal": 119.22,
+    "masoorDal": 84.22,
+    "sugar": 43.22,
+    "milk": 50.78,
+    "groundnutOil": 166.89,
+    "mustardOil": 138.11,
+    "vanaspati": 113.78,
+    "soyaOil": 127.11,
+    "sunflowerOil": 120.67,
+    "palmOil": 107.67,
+    "gur": 55.56,
+    "teaLoose": 238.22,
+    "saltPack": 19.44,
+    "potato": 33.89,
+    "onion": 37.78,
+    "tomato": 44.33
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Uttar Pradesh",
+    "rice": 36.27,
+    "wheat": 25.07,
+    "atta": 29.2,
+    "gramDal": 87.53,
+    "turArharDal": 164.73,
+    "uradDal": 137.27,
+    "moongDal": 116.2,
+    "masoorDal": 90.13,
+    "sugar": 41.73,
+    "milk": 50.4,
+    "groundnutOil": 155.27,
+    "mustardOil": 136.93,
+    "vanaspati": 113.47,
+    "soyaOil": 117.93,
+    "sunflowerOil": 105.33,
+    "palmOil": 106.93,
+    "gur": 52.93,
+    "teaLoose": 246.93,
+    "saltPack": 19.2,
+    "potato": 29.33,
+    "onion": 30.33,
+    "tomato": 34.6
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "Uttarakhand",
+    "rice": 35.36,
+    "wheat": 26.57,
+    "atta": 30.43,
+    "gramDal": 86.71,
+    "turArharDal": 161.43,
+    "uradDal": 132.71,
+    "moongDal": 114.86,
+    "masoorDal": 92.71,
+    "sugar": 44,
+    "milk": 55.43,
+    "groundnutOil": 166.43,
+    "mustardOil": 141.57,
+    "vanaspati": 121.86,
+    "soyaOil": 125.86,
+    "sunflowerOil": 116.86,
+    "palmOil": 119,
+    "gur": 53.71,
+    "teaLoose": 248,
+    "saltPack": 22.29,
+    "potato": 30.57,
+    "onion": 33.29,
+    "tomato": 42.86
+  },
+  {
+    "date": "2024-08-06",
+    "id": 1,
+    "state": "West Bengal",
+    "rice": 36.11,
+    "wheat": 27.44,
+    "atta": 29.56,
+    "gramDal": 85.89,
+    "turArharDal": 165.11,
+    "uradDal": 127.11,
+    "moongDal": 110.33,
+    "masoorDal": 87.33,
+    "sugar": 43.33,
+    "milk": 49.44,
+    "groundnutOil": 166.22,
+    "mustardOil": 157.22,
+    "vanaspati": 123.11,
+    "soyaOil": 118.89,
+    "sunflowerOil": 119.67,
+    "palmOil": 112.22,
+    "gur": 49.89,
+    "teaLoose": 243.11,
+    "saltPack": 20.56,
+    "potato": 34.89,
+    "onion": 31.89,
+    "tomato": 36.67
+  },
+ ]
+    // Create the main chart for all commodities
+    function createAllCommoditiesChart(data) {
+        var states = data.map(item => item.state);
+        var ricePrices = data.map(item => item.rice);
+        var wheatPrices = data.map(item => item.wheat);
+        var attaPrices = data.map(item => item.atta);
+       var gramDalPrices = data.map(item => item.gramDal);
+       var turArharDalPrices = data.map(item => item.turArharDal);
+       var uradDalPrices = data.map(item => item.uradDal);
+       var moongDalPrices = data.map(item => item.moongDal);
+       var masoorDalPrices = data.map(item => item.masoorDal);
+       var sugarPrices = data.map(item => item.sugar);
+       var milkPrices = data.map(item => item.milk);
+       var groundnutOilPrices = data.map(item => item.groundnutOil);
+       var mustardOilPrices = data.map(item => item.mustardOil);
+       var vanaspatiPrices = data.map(item => item.vanaspati);
+       var soyaOilPrices = data.map(item => item.soyaOil);
+       var sunflowerOilPrices = data.map(item => item.sunflowerOil);
+       var palmOilPrices = data.map(item => item.palmOil);
+       var gurPrices = data.map(item => item.gur);
+       var teaLoosePrices = data.map(item => item.teaLoose);
+       var saltPackPrices = data.map(item => item.saltPack);
+       var potatoPrices = data.map(item => item.potato);
+       var onionPrices = data.map(item => item.onion);
+       var tomatoPrices = data.map(item => item.tomato);
+
+        // Main chart
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: states,
+                datasets: [
+                    { label: 'Rice', data: ricePrices, backgroundColor: 'rgba(255, 99, 132, 0.2)', borderColor: 'rgba(255, 99, 132, 1)', borderWidth: 1 },
+    { label: 'Wheat', data: wheatPrices, backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgba(54, 162, 235, 1)', borderWidth: 1 },
+    { label: 'Atta', data: attaPrices, backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 1)', borderWidth: 1 },
+    { label: 'Gram Dal', data: gramDalPrices, backgroundColor: 'rgba(153, 102, 255, 0.2)', borderColor: 'rgba(153, 102, 255, 1)', borderWidth: 1 },
+    { label: 'Tur Arhar Dal', data: turArharDalPrices, backgroundColor: 'rgba(255, 159, 64, 0.2)', borderColor: 'rgba(255, 159, 64, 1)', borderWidth: 1 },
+    { label: 'Urad Dal', data: uradDalPrices, backgroundColor: 'rgba(255, 206, 86, 0.2)', borderColor: 'rgba(255, 206, 86, 1)', borderWidth: 1 },
+    { label: 'Moong Dal', data: moongDalPrices, backgroundColor: 'rgba(54, 235, 162, 0.2)', borderColor: 'rgba(54, 235, 162, 1)', borderWidth: 1 },
+    { label: 'Masoor Dal', data: masoorDalPrices, backgroundColor: 'rgba(255, 99, 132, 0.2)', borderColor: 'rgba(255, 99, 132, 1)', borderWidth: 1 },
+    { label: 'Sugar', data: sugarPrices, backgroundColor: 'rgba(54, 162, 235, 0.2)', borderColor: 'rgba(54, 162, 235, 1)', borderWidth: 1 },
+    { label: 'Milk', data: milkPrices, backgroundColor: 'rgba(255, 159, 64, 0.2)', borderColor: 'rgba(255, 159, 64, 1)', borderWidth: 1 },
+    { label: 'Groundnut Oil', data: groundnutOilPrices, backgroundColor: 'rgba(153, 102, 255, 0.2)', borderColor: 'rgba(153, 102, 255, 1)', borderWidth: 1 },
+    { label: 'Mustard Oil', data: mustardOilPrices, backgroundColor: 'rgba(255, 206, 86, 0.2)', borderColor: 'rgba(255, 206, 86, 1)', borderWidth: 1 },
+    { label: 'Vanaspati', data: vanaspatiPrices, backgroundColor: 'rgba(54, 162, 162, 0.2)', borderColor: 'rgba(54, 162, 162, 1)', borderWidth: 1 },
+    { label: 'Soya Oil', data: soyaOilPrices, backgroundColor: 'rgba(75, 192, 192, 0.2)', borderColor: 'rgba(75, 192, 192, 1)', borderWidth: 1 },
+    { label: 'Sunflower Oil', data: sunflowerOilPrices, backgroundColor: 'rgba(255, 99, 64, 0.2)', borderColor: 'rgba(255, 99, 64, 1)', borderWidth: 1 },
+    { label: 'Palm Oil', data: palmOilPrices, backgroundColor: 'rgba(153, 102, 205, 0.2)', borderColor: 'rgba(153, 102, 205, 1)', borderWidth: 1 },
+    { label: 'Gur', data: gurPrices, backgroundColor: 'rgba(54, 162, 205, 0.2)', borderColor: 'rgba(54, 162, 205, 1)', borderWidth: 1 },
+    { label: 'Tea Loose', data: teaLoosePrices, backgroundColor: 'rgba(255, 159, 132, 0.2)', borderColor: 'rgba(255, 159, 132, 1)', borderWidth: 1 },
+    { label: 'Salt Pack', data: saltPackPrices, backgroundColor: 'rgba(75, 235, 192, 0.2)', borderColor: 'rgba(75, 235, 192, 1)', borderWidth: 1 },
+    { label: 'Potato', data: potatoPrices, backgroundColor: 'rgba(153, 162, 235, 0.2)', borderColor: 'rgba(153, 162, 235, 1)', borderWidth: 1 },
+    { label: 'Onion', data: onionPrices, backgroundColor: 'rgba(255, 206, 192, 0.2)', borderColor: 'rgba(255, 206, 192, 1)', borderWidth: 1 },
+    { label: 'Tomato', data: tomatoPrices, backgroundColor: 'rgba(75, 99, 192, 0.2)', borderColor: 'rgba(75, 99, 192, 1)', borderWidth: 1 }
+                ]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+
+    // Call the chart creation functions
+    createAllCommoditiesChart(sampleData); // Create the main chart
+    if (selectedState && selectedCommodity) {
+        createSelectedCommodityChart(sampleData, selectedState, selectedCommodity); // Create the selected state and commodity chart
+    }
+      // Compare button functionality for comparing two commodities
+   document.getElementById('compareBtn').addEventListener('click', function() {
+       var selectedCommodity1 = document.getElementById('commodity1').value;
+       var selectedCommodity2 = document.getElementById('commodity2').value;
+
+       // Fetch data from the backend API
+       fetch("/api/data")
+           .then(response => response.json())
+           .then(data => {
+               var states = data.map(item => item.state);
+               var commodity1Prices = data.map(item => item[selectedCommodity1]);
+               var commodity2Prices = data.map(item => item[selectedCommodity2]);
+
+               // Destroy the previous chart if it exists
+               if (window.myComparisonChart) {
+                   window.myComparisonChart.destroy();
+               }
+
+               // Create a line chart for comparison
+               var ctx = document.getElementById('comparisonChart').getContext('2d');
+               window.myComparisonChart = new Chart(ctx, {
+                   type: 'line',
+                   data: {
+                       labels: states,
+                       datasets: [
+                           {
+                               label: selectedCommodity1.charAt(0).toUpperCase() + selectedCommodity1.slice(1) + ' Prices',
+                               data: commodity1Prices,
+                               backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                               borderColor: 'rgba(255, 99, 132, 1)',
+                               borderWidth: 1,
+                               fill: false
+                           },
+                           {
+                               label: selectedCommodity2.charAt(0).toUpperCase() + selectedCommodity2.slice(1) + ' Prices',
+                               data: commodity2Prices,
+                               backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                               borderColor: 'rgba(54, 162, 235, 1)',
+                               borderWidth: 1,
+                               fill: false
+                           }
+                       ]
+                   },
+                   options: {
+                       scales: {
+                           y: {
+                               beginAtZero: true
+                           }
+                       }
+                   }
+               });
+           })
+           .catch(error => console.error('Error fetching data:', error));
+   });
+
+        // Function to get query parameters from the URL
+        function getQueryParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                state: params.get('state'),
+                commodity: params.get('commodity'),
+                date: params.get('date')
+            };
+        }
+
+         // Fetch and filter data based on selected states and commodity
+    document.getElementById('compareStatesBtn').addEventListener('click', function() {
+        var selectedState1 = document.getElementById('state1').value;
+        var selectedState2 = document.getElementById('state2').value;
+        var selectedCommodity = document.getElementById('commodity').value;
+
+        // Fetch data (Replace with actual API or data-fetching method)
+        fetch("/api/data") // Adjust this to your actual data endpoint
+            .then(response => response.json())
+            .then(data => {
+                // Filter the data for the selected states and commodity
+                var state1Data = data.filter(item => item.state === selectedState1).map(item => item[selectedCommodity]);
+                var state2Data = data.filter(item => item.state === selectedState2).map(item => item[selectedCommodity]);
+                var dates = data.map(item => item.date); // Assuming the data has dates for x-axis
+
+                // Destroy previous chart if it exists
+                if (window.statesComparisonChart) {
+                    window.statesComparisonChart.destroy();
+                }
+
+                // Create a new chart for state comparison
+                var ctx = document.getElementById('statesComparisonChart').getContext('2d');
+                window.statesComparisonChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: dates, // X-axis, assuming dates are available in your data
+                        datasets: [
+                            {
+                                label: selectedState1 + ' - ' + selectedCommodity.charAt(0).toUpperCase() + selectedCommodity.slice(1),
+                                data: state1Data,
+                                borderColor: 'rgba(255, 99, 132, 1)',
+                                borderWidth: 2,
+                                fill: false
+                            },
+                            {
+                                label: selectedState2 + ' - ' + selectedCommodity.charAt(0).toUpperCase() + selectedCommodity.slice(1),
+                                data: state2Data,
+                                borderColor: 'rgba(54, 162, 235, 1)',
+                                borderWidth: 2,
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Dates'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Price (in Rs)'
+                                },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    });
+
+        // Sample data for states and commodity prices (replace this with dynamic data)
+        const allStatePrices = {
+              rice: {
+        "Andhra Pradesh": 30,
+        "Arunachal Pradesh": 28,
+        "Assam": 29,
+        "Bihar": 31,
+        "Chhattisgarh": 30,
+        "Goa": 32,
+        "Gujarat": 33,
+        "Haryana": 31,
+        "Himachal Pradesh": 29,
+        "Jharkhand": 30,
+        "Karnataka": 31,
+        "Kerala": 33,
+        "Madhya Pradesh": 32,
+        "Maharashtra": 32,
+        "Manipur": 29,
+        "Meghalaya": 31,
+        "Mizoram": 28,
+        "Nagaland": 30,
+        "Odisha": 31,
+        "Punjab": 32,
+        "Rajasthan": 30,
+        "Sikkim": 29,
+        "Tamil Nadu": 29,
+        "Telangana": 31,
+        "Tripura": 28,
+        "Uttar Pradesh": 31,
+        "Uttarakhand": 30,
+        "West Bengal": 32,
+        "Andaman and Nicobar Islands": 30,
+        "Chandigarh": 31,
+        "Dadra and Nagar Haveli and Daman and Diu": 29,
+        "Lakshadweep": 32,
+        "Delhi": 33,
+        "Puducherry": 31,
+        "Jammu and Kashmir": 30,
+        "Ladakh": 29
+    },
+    wheat: {
+        "Andhra Pradesh": 40,
+        "Arunachal Pradesh": 38,
+        "Assam": 39,
+        "Bihar": 41,
+        "Chhattisgarh": 40,
+        "Goa": 42,
+        "Gujarat": 39,
+        "Haryana": 38,
+        "Himachal Pradesh": 40,
+        "Jharkhand": 39,
+        "Karnataka": 41,
+        "Kerala": 42,
+        "Madhya Pradesh": 40,
+        "Maharashtra": 42,
+        "Manipur": 39,
+        "Meghalaya": 40,
+        "Mizoram": 38,
+        "Nagaland": 39,
+        "Odisha": 41,
+        "Punjab": 40,
+        "Rajasthan": 42,
+        "Sikkim": 39,
+        "Tamil Nadu": 38,
+        "Telangana": 41,
+        "Tripura": 38,
+        "Uttar Pradesh": 41,
+        "Uttarakhand": 40,
+        "West Bengal": 42,
+        "Andaman and Nicobar Islands": 40,
+        "Chandigarh": 39,
+        "Dadra and Nagar Haveli and Daman and Diu": 41,
+        "Lakshadweep": 42,
+        "Delhi": 40,
+        "Puducherry": 39,
+        "Jammu and Kashmir": 40,
+        "Ladakh": 38
+    },
+    atta: {
+        "Andhra Pradesh": 35,
+        "Arunachal Pradesh": 33,
+        "Assam": 34,
+        "Bihar": 36,
+        "Chhattisgarh": 35,
+        "Goa": 37,
+        "Gujarat": 38,
+        "Haryana": 36,
+        "Himachal Pradesh": 35,
+        "Jharkhand": 34,
+        "Karnataka": 36,
+        "Kerala": 38,
+        "Madhya Pradesh": 37,
+        "Maharashtra": 37,
+        "Manipur": 35,
+        "Meghalaya": 34,
+        "Mizoram": 33,
+        "Nagaland": 35,
+        "Odisha": 36,
+        "Punjab": 37,
+        "Rajasthan": 35,
+        "Sikkim": 34,
+        "Tamil Nadu": 34,
+        "Telangana": 36,
+        "Tripura": 33,
+        "Uttar Pradesh": 36,
+        "Uttarakhand": 35,
+        "West Bengal": 37,
+        "Andaman and Nicobar Islands": 35,
+        "Chandigarh": 34,
+        "Dadra and Nagar Haveli and Daman and Diu": 36,
+        "Lakshadweep": 37,
+        "Delhi": 35,
+        "Puducherry": 34,
+        "Jammu and Kashmir": 35,
+        "Ladakh": 33
+    },
+    gramDal: {
+        "Andhra Pradesh": 65,
+        "Arunachal Pradesh": 62,
+        "Assam": 64,
+        "Bihar": 67,
+        "Chhattisgarh": 66,
+        "Goa": 68,
+        "Gujarat": 67,
+        "Haryana": 65,
+        "Himachal Pradesh": 63,
+        "Jharkhand": 64,
+        "Karnataka": 66,
+        "Kerala": 67,
+        "Madhya Pradesh": 66,
+        "Maharashtra": 67,
+        "Manipur": 64,
+        "Meghalaya": 65,
+        "Mizoram": 62,
+        "Nagaland": 64,
+        "Odisha": 66,
+        "Punjab": 67,
+        "Rajasthan": 65,
+        "Sikkim": 64,
+        "Tamil Nadu": 63,
+        "Telangana": 65,
+        "Tripura": 62,
+        "Uttar Pradesh": 66,
+        "Uttarakhand": 65,
+        "West Bengal": 67,
+        "Andaman and Nicobar Islands": 64,
+        "Chandigarh": 63,
+        "Dadra and Nagar Haveli and Daman and Diu": 66,
+        "Lakshadweep": 67,
+        "Delhi": 65,
+        "Puducherry": 64,
+        "Jammu and Kashmir": 65,
+        "Ladakh": 62
+    },
+    turArharDal: {
+        "Andhra Pradesh": 90,
+        "Arunachal Pradesh": 87,
+        "Assam": 88,
+        "Bihar": 91,
+        "Chhattisgarh": 90,
+        "Goa": 92,
+        "Gujarat": 91,
+        "Haryana": 90,
+        "Himachal Pradesh": 88,
+        "Jharkhand": 89,
+        "Karnataka": 91,
+        "Kerala": 92,
+        "Madhya Pradesh": 91,
+        "Maharashtra": 92,
+        "Manipur": 88,
+        "Meghalaya": 89,
+        "Mizoram": 87,
+        "Nagaland": 89,
+        "Odisha": 91,
+        "Punjab": 92,
+        "Rajasthan": 90,
+        "Sikkim": 89,
+        "Tamil Nadu": 88,
+        "Telangana": 90,
+        "Tripura": 87,
+        "Uttar Pradesh": 90,
+        "Uttarakhand": 89,
+        "West Bengal": 92,
+        "Andaman and Nicobar Islands": 89,
+        "Chandigarh": 88,
+        "Dadra and Nagar Haveli and Daman and Diu": 90,
+        "Lakshadweep": 91,
+        "Delhi": 90,
+        "Puducherry": 89,
+        "Jammu and Kashmir": 90,
+        "Ladakh": 87
+    },
+    uradDal: {
+        "Andhra Pradesh": 80,
+        "Arunachal Pradesh": 77,
+        "Assam": 78,
+        "Bihar": 81,
+        "Chhattisgarh": 80,
+        "Goa": 82,
+        "Gujarat": 81,
+        "Haryana": 80,
+        "Himachal Pradesh": 78,
+        "Jharkhand": 79,
+        "Karnataka": 81,
+        "Kerala": 82,
+        "Madhya Pradesh": 81,
+        "Maharashtra": 82,
+        "Manipur": 78,
+        "Meghalaya": 79,
+        "Mizoram": 77,
+        "Nagaland": 79,
+        "Odisha": 81,
+        "Punjab": 82,
+        "Rajasthan": 80,
+        "Sikkim": 79,
+        "Tamil Nadu": 78,
+        "Telangana": 80,
+        "Tripura": 77,
+        "Uttar Pradesh": 80,
+        "Uttarakhand": 79,
+        "West Bengal": 82,
+        "Andaman and Nicobar Islands": 79,
+        "Chandigarh": 78,
+        "Dadra and Nagar Haveli and Daman and Diu": 80,
+        "Lakshadweep": 81,
+        "Delhi": 80,
+        "Puducherry": 79,
+        "Jammu and Kashmir": 80,
+        "Ladakh": 77
+    },
+    sugar: {
+        "Andhra Pradesh": 40,
+        "Arunachal Pradesh": 38,
+        "Assam": 39,
+        "Bihar": 42,
+        "Chhattisgarh": 41,
+        "Goa": 43,
+        "Gujarat": 42,
+        "Haryana": 41,
+        "Himachal Pradesh": 40,
+        "Jharkhand": 39,
+        "Karnataka": 41,
+        "Kerala": 43,
+        "Madhya Pradesh": 42,
+        "Maharashtra": 43,
+        "Manipur": 40,
+        "Meghalaya": 41,
+        "Mizoram": 38,
+        "Nagaland": 39,
+        "Odisha": 41,
+        "Punjab": 42,
+        "Rajasthan": 41,
+        "Sikkim": 39,
+        "Tamil Nadu": 38,
+        "Telangana": 41,
+        "Tripura": 38,
+        "Uttar Pradesh": 41,
+        "Uttarakhand": 40,
+        "West Bengal": 43,
+        "Andaman and Nicobar Islands": 40,
+        "Chandigarh": 39,
+        "Dadra and Nagar Haveli and Daman and Diu": 41,
+        "Lakshadweep": 43,
+        "Delhi": 41,
+        "Puducherry": 40,
+        "Jammu and Kashmir": 41,
+        "Ladakh": 38
+    },
+         moongDal: {
+        "Andhra Pradesh": 95,
+        "Arunachal Pradesh": 92,
+        "Assam": 93,
+        "Bihar": 96,
+        "Chhattisgarh": 95,
+        "Goa": 97,
+        "Gujarat": 96,
+        "Haryana": 95,
+        "Himachal Pradesh": 93,
+        "Jharkhand": 94,
+        "Karnataka": 96,
+        "Kerala": 97,
+        "Madhya Pradesh": 96,
+        "Maharashtra": 97,
+        "Manipur": 94,
+        "Meghalaya": 95,
+        "Mizoram": 92,
+        "Nagaland": 94,
+        "Odisha": 96,
+        "Punjab": 97,
+        "Rajasthan": 95,
+        "Sikkim": 94,
+        "Tamil Nadu": 93,
+        "Telangana": 95,
+        "Tripura": 92,
+        "Uttar Pradesh": 95,
+        "Uttarakhand": 94,
+        "West Bengal": 97,
+        "Andaman and Nicobar Islands": 94,
+        "Chandigarh": 93,
+        "Dadra and Nagar Haveli and Daman and Diu": 95,
+        "Lakshadweep": 96,
+        "Delhi": 95,
+        "Puducherry": 94,
+        "Jammu and Kashmir": 95,
+        "Ladakh": 92
+    },
+    masoorDal: {
+        "Andhra Pradesh": 85,
+        "Arunachal Pradesh": 82,
+        "Assam": 83,
+        "Bihar": 86,
+        "Chhattisgarh": 85,
+        "Goa": 87,
+        "Gujarat": 86,
+        "Haryana": 85,
+        "Himachal Pradesh": 83,
+        "Jharkhand": 84,
+        "Karnataka": 86,
+        "Kerala": 87,
+        "Madhya Pradesh": 86,
+        "Maharashtra": 87,
+        "Manipur": 84,
+        "Meghalaya": 85,
+        "Mizoram": 82,
+        "Nagaland": 84,
+        "Odisha": 86,
+        "Punjab": 87,
+        "Rajasthan": 85,
+        "Sikkim": 84,
+        "Tamil Nadu": 83,
+        "Telangana": 85,
+        "Tripura": 82,
+        "Uttar Pradesh": 85,
+        "Uttarakhand": 84,
+        "West Bengal": 87,
+        "Andaman and Nicobar Islands": 84,
+        "Chandigarh": 83,
+        "Dadra and Nagar Haveli and Daman and Diu": 85,
+        "Lakshadweep": 86,
+        "Delhi": 85,
+        "Puducherry": 84,
+        "Jammu and Kashmir": 85,
+        "Ladakh": 82
+    },
+    milk: {
+        "Andhra Pradesh": 50,
+        "Arunachal Pradesh": 48,
+        "Assam": 49,
+        "Bihar": 52,
+        "Chhattisgarh": 51,
+        "Goa": 53,
+        "Gujarat": 52,
+        "Haryana": 51,
+        "Himachal Pradesh": 49,
+        "Jharkhand": 50,
+        "Karnataka": 52,
+        "Kerala": 53,
+        "Madhya Pradesh": 52,
+        "Maharashtra": 53,
+        "Manipur": 50,
+        "Meghalaya": 51,
+        "Mizoram": 48,
+        "Nagaland": 50,
+        "Odisha": 52,
+        "Punjab": 53,
+        "Rajasthan": 51,
+        "Sikkim": 50,
+        "Tamil Nadu": 49,
+        "Telangana": 51,
+        "Tripura": 48,
+        "Uttar Pradesh": 51,
+        "Uttarakhand": 50,
+        "West Bengal": 53,
+        "Andaman and Nicobar Islands": 50,
+        "Chandigarh": 49,
+        "Dadra and Nagar Haveli and Daman and Diu": 51,
+        "Lakshadweep": 52,
+        "Delhi": 51,
+        "Puducherry": 50,
+        "Jammu and Kashmir": 51,
+        "Ladakh": 48
+    },
+    groundnutOil: {
+        "Andhra Pradesh": 180,
+        "Arunachal Pradesh": 175,
+        "Assam": 178,
+        "Bihar": 182,
+        "Chhattisgarh": 180,
+        "Goa": 185,
+        "Gujarat": 183,
+        "Haryana": 180,
+        "Himachal Pradesh": 178,
+        "Jharkhand": 179,
+        "Karnataka": 182,
+        "Kerala": 185,
+        "Madhya Pradesh": 182,
+        "Maharashtra": 185,
+        "Manipur": 179,
+        "Meghalaya": 180,
+        "Mizoram": 175,
+        "Nagaland": 179,
+        "Odisha": 182,
+        "Punjab": 185,
+        "Rajasthan": 180,
+        "Sikkim": 179,
+        "Tamil Nadu": 178,
+        "Telangana": 180,
+        "Tripura": 175,
+        "Uttar Pradesh": 180,
+        "Uttarakhand": 179,
+        "West Bengal": 185,
+        "Andaman and Nicobar Islands": 179,
+        "Chandigarh": 178,
+        "Dadra and Nagar Haveli and Daman and Diu": 180,
+        "Lakshadweep": 182,
+        "Delhi": 180,
+        "Puducherry": 179,
+        "Jammu and Kashmir": 180,
+        "Ladakh": 175
+    },
+    mustardOil: {
+        "Andhra Pradesh": 150,
+        "Arunachal Pradesh": 145,
+        "Assam": 148,
+        "Bihar": 152,
+        "Chhattisgarh": 150,
+        "Goa": 155,
+        "Gujarat": 153,
+        "Haryana": 150,
+        "Himachal Pradesh": 148,
+        "Jharkhand": 149,
+        "Karnataka": 152,
+        "Kerala": 155,
+        "Madhya Pradesh": 152,
+        "Maharashtra": 155,
+        "Manipur": 149,
+        "Meghalaya": 150,
+        "Mizoram": 145,
+        "Nagaland": 149,
+        "Odisha": 152,
+        "Punjab": 155,
+        "Rajasthan": 150,
+        "Sikkim": 149,
+        "Tamil Nadu": 148,
+        "Telangana": 150,
+        "Tripura": 145,
+        "Uttar Pradesh": 150,
+        "Uttarakhand": 149,
+        "West Bengal": 155,
+        "Andaman and Nicobar Islands": 149,
+        "Chandigarh": 148,
+        "Dadra and Nagar Haveli and Daman and Diu": 150,
+        "Lakshadweep": 152,
+        "Delhi": 150,
+        "Puducherry": 149,
+        "Jammu and Kashmir": 150,
+        "Ladakh": 145
+    },
+    vanaspati: {
+        "Andhra Pradesh": 120,
+        "Arunachal Pradesh": 115,
+        "Assam": 118,
+        "Bihar": 122,
+        "Chhattisgarh": 120,
+        "Goa": 125,
+        "Gujarat": 123,
+        "Haryana": 120,
+        "Himachal Pradesh": 118,
+        "Jharkhand": 119,
+        "Karnataka": 122,
+        "Kerala": 125,
+        "Madhya Pradesh": 122,
+        "Maharashtra": 125,
+        "Manipur": 119,
+        "Meghalaya": 120,
+        "Mizoram": 115,
+        "Nagaland": 119,
+        "Odisha": 122,
+        "Punjab": 125,
+        "Rajasthan": 120,
+        "Sikkim": 119,
+        "Tamil Nadu": 118,
+        "Telangana": 120,
+        "Tripura": 115,
+        "Uttar Pradesh": 120,
+        "Uttarakhand": 119,
+        "West Bengal": 125,
+        "Andaman and Nicobar Islands": 119,
+        "Chandigarh": 118,
+        "Dadra and Nagar Haveli and Daman and Diu": 120,
+        "Lakshadweep": 122,
+        "Delhi": 120,
+        "Puducherry": 119,
+        "Jammu and Kashmir": 120,
+        "Ladakh": 115
+    },
+    soyaOil: {
+        "Andhra Pradesh": 120,
+        "Arunachal Pradesh": 115,
+        "Assam": 118,
+        "Bihar": 122,
+        "Chhattisgarh": 120,
+        "Goa": 125,
+        "Gujarat": 123,
+        "Haryana": 120,
+        "Himachal Pradesh": 118,
+        "Jharkhand": 119,
+        "Karnataka": 122,
+        "Kerala": 125,
+        "Madhya Pradesh": 122,
+        "Maharashtra": 125,
+        "Manipur": 119,
+        "Meghalaya": 120,
+        "Mizoram": 115,
+        "Nagaland": 119,
+        "Odisha": 122,
+        "Punjab": 125,
+        "Rajasthan": 120,
+        "Sikkim": 119,
+        "Tamil Nadu": 118,
+        "Telangana": 120,
+        "Tripura": 115,
+        "Uttar Pradesh": 120,
+        "Uttarakhand": 119,
+        "West Bengal": 125,
+        "Andaman and Nicobar Islands": 119,
+        "Chandigarh": 118,
+        "Dadra and Nagar Haveli and Daman and Diu": 120,
+        "Lakshadweep": 122,
+        "Delhi": 120,
+        "Puducherry": 119,
+        "Jammu and Kashmir": 120,
+        "Ladakh": 115
+    },
+    sunflowerOil: {
+        "Andhra Pradesh": 110,
+        "Arunachal Pradesh": 105,
+        "Assam": 108,
+        "Bihar": 112,
+        "Chhattisgarh": 110,
+        "Goa": 115,
+        "Gujarat": 113,
+        "Haryana": 110,
+        "Himachal Pradesh": 108,
+        "Jharkhand": 109,
+        "Karnataka": 112,
+        "Kerala": 115,
+        "Madhya Pradesh": 112,
+        "Maharashtra": 115,
+        "Manipur": 109,
+        "Meghalaya": 110,
+        "Mizoram": 105,
+        "Nagaland": 109,
+        "Odisha": 112,
+        "Punjab": 115,
+        "Rajasthan": 110,
+        "Sikkim": 109,
+        "Tamil Nadu": 108,
+        "Telangana": 110,
+        "Tripura": 105,
+        "Uttar Pradesh": 110,
+        "Uttarakhand": 109,
+        "West Bengal": 115,
+        "Andaman and Nicobar Islands": 109,
+        "Chandigarh": 108,
+        "Dadra and Nagar Haveli and Daman and Diu": 110,
+        "Lakshadweep": 112,
+        "Delhi": 110,
+        "Puducherry": 109,
+        "Jammu and Kashmir": 110,
+        "Ladakh": 105
+    },
+    palmOil: {
+        "Andhra Pradesh": 95,
+        "Arunachal Pradesh": 90,
+        "Assam": 93,
+        "Bihar": 97,
+        "Chhattisgarh": 95,
+        "Goa": 100,
+        "Gujarat": 98,
+        "Haryana": 95,
+        "Himachal Pradesh": 93,
+        "Jharkhand": 94,
+        "Karnataka": 97,
+        "Kerala": 100,
+        "Madhya Pradesh": 97,
+        "Maharashtra": 100,
+        "Manipur": 94,
+        "Meghalaya": 95,
+        "Mizoram": 90,
+        "Nagaland": 94,
+        "Odisha": 97,
+        "Punjab": 100,
+        "Rajasthan": 95,
+        "Sikkim": 94,
+        "Tamil Nadu": 93,
+        "Telangana": 95,
+        "Tripura": 90,
+        "Uttar Pradesh": 95,
+        "Uttarakhand": 94,
+        "West Bengal": 100,
+        "Andaman and Nicobar Islands": 94,
+        "Chandigarh": 93,
+        "Dadra and Nagar Haveli and Daman and Diu": 95,
+        "Lakshadweep": 97,
+        "Delhi": 95,
+        "Puducherry": 94,
+        "Jammu and Kashmir": 95,
+        "Ladakh": 90
+    },
+    gur: {
+        "Andhra Pradesh": 45,
+        "Arunachal Pradesh": 43,
+        "Assam": 44,
+        "Bihar": 46,
+        "Chhattisgarh": 45,
+        "Goa": 47,
+        "Gujarat": 46,
+        "Haryana": 45,
+        "Himachal Pradesh": 44,
+        "Jharkhand": 44,
+        "Karnataka": 46,
+        "Kerala": 47,
+        "Madhya Pradesh": 46,
+        "Maharashtra": 47,
+        "Manipur": 44,
+        "Meghalaya": 45,
+        "Mizoram": 43,
+        "Nagaland": 44,
+        "Odisha": 46,
+        "Punjab": 47,
+        "Rajasthan": 45,
+        "Sikkim": 44,
+        "Tamil Nadu": 44,
+        "Telangana": 45,
+        "Tripura": 43,
+        "Uttar Pradesh": 45,
+        "Uttarakhand": 44,
+        "West Bengal": 47,
+        "Andaman and Nicobar Islands": 44,
+        "Chandigarh": 44,
+        "Dadra and Nagar Haveli and Daman and Diu": 45,
+        "Lakshadweep": 46,
+        "Delhi": 45,
+        "Puducherry": 44,
+        "Jammu and Kashmir": 45,
+        "Ladakh": 43
+    },
+    teaLoose: {
+        "Andhra Pradesh": 400,
+        "Arunachal Pradesh": 390,
+        "Assam": 395,
+        "Bihar": 405,
+        "Chhattisgarh": 400,
+        "Goa": 410,
+        "Gujarat": 405,
+        "Haryana": 400,
+        "Himachal Pradesh": 395,
+        "Jharkhand": 398,
+        "Karnataka": 405,
+        "Kerala": 410,
+        "Madhya Pradesh": 405,
+        "Maharashtra": 410,
+        "Manipur": 398,
+        "Meghalaya": 400,
+        "Mizoram": 390,
+        "Nagaland": 398,
+        "Odisha": 405,
+        "Punjab": 410,
+        "Rajasthan": 400,
+        "Sikkim": 398,
+        "Tamil Nadu": 395,
+        "Telangana": 400,
+        "Tripura": 390,
+        "Uttar Pradesh": 400,
+        "Uttarakhand": 398,
+        "West Bengal": 410,
+        "Andaman and Nicobar Islands": 398,
+        "Chandigarh": 395,
+        "Dadra and Nagar Haveli and Daman and Diu": 400,
+        "Lakshadweep": 405,
+        "Delhi": 400,
+        "Puducherry": 398,
+        "Jammu and Kashmir": 400,
+        "Ladakh": 390
+    },
+    saltPack: {
+        "Andhra Pradesh": 15,
+        "Arunachal Pradesh": 14,
+        "Assam": 15,
+        "Bihar": 16,
+        "Chhattisgarh": 15,
+        "Goa": 17,
+        "Gujarat": 16,
+        "Haryana": 15,
+        "Himachal Pradesh": 14,
+        "Jharkhand": 15,
+        "Karnataka": 16,
+        "Kerala": 17,
+        "Madhya Pradesh": 16,
+        "Maharashtra": 17,
+        "Manipur": 15,
+        "Meghalaya": 15,
+        "Mizoram": 14,
+        "Nagaland": 15,
+        "Odisha": 16,
+        "Punjab": 17,
+        "Rajasthan": 15,
+        "Sikkim": 15,
+        "Tamil Nadu": 14,
+        "Telangana": 15,
+        "Tripura": 14,
+        "Uttar Pradesh": 15,
+        "Uttarakhand": 15,
+        "West Bengal": 17,
+        "Andaman and Nicobar Islands": 15,
+        "Chandigarh": 14,
+        "Dadra and Nagar Haveli and Daman and Diu": 15,
+        "Lakshadweep": 16,
+        "Delhi": 15,
+        "Puducherry": 15,
+        "Jammu and Kashmir": 15,
+        "Ladakh": 14
+    },
+    potato: {
+        "Andhra Pradesh": 25,
+        "Arunachal Pradesh": 23,
+        "Assam": 24,
+        "Bihar": 26,
+        "Chhattisgarh": 25,
+        "Goa": 27,
+        "Gujarat": 26,
+        "Haryana": 25,
+        "Himachal Pradesh": 24,
+        "Jharkhand": 24,
+        "Karnataka": 26,
+        "Kerala": 27,
+        "Madhya Pradesh": 26,
+        "Maharashtra": 27,
+        "Manipur": 24,
+        "Meghalaya": 25,
+        "Mizoram": 23,
+        "Nagaland": 24,
+        "Odisha": 26,
+        "Punjab": 27,
+        "Rajasthan": 25,
+        "Sikkim": 24,
+        "Tamil Nadu": 24,
+        "Telangana": 25,
+        "Tripura": 23,
+        "Uttar Pradesh": 25,
+        "Uttarakhand": 24,
+        "West Bengal": 27,
+        "Andaman and Nicobar Islands": 24,
+        "Chandigarh": 24,
+        "Dadra and Nagar Haveli and Daman and Diu": 25,
+        "Lakshadweep": 26,
+        "Delhi": 25,
+        "Puducherry": 24,
+        "Jammu and Kashmir": 25,
+        "Ladakh": 23
+    },
+    onion: {
+        "Andhra Pradesh": 40,
+        "Arunachal Pradesh": 38,
+        "Assam": 39,
+        "Bihar": 41,
+        "Chhattisgarh": 40,
+        "Goa": 42,
+        "Gujarat": 41,
+        "Haryana": 40,
+        "Himachal Pradesh": 39,
+        "Jharkhand": 39,
+        "Karnataka": 41,
+        "Kerala": 42,
+        "Madhya Pradesh": 41,
+        "Maharashtra": 42,
+        "Manipur": 39,
+        "Meghalaya": 40,
+        "Mizoram": 38,
+        "Nagaland": 39,
+        "Odisha": 41,
+        "Punjab": 42,
+        "Rajasthan": 40,
+        "Sikkim": 39,
+        "Tamil Nadu": 39,
+        "Telangana": 40,
+        "Tripura": 38,
+        "Uttar Pradesh": 40,
+        "Uttarakhand": 39,
+        "West Bengal": 42,
+        "Andaman and Nicobar Islands": 39,
+        "Chandigarh": 39,
+        "Dadra and Nagar Haveli and Daman and Diu": 40,
+        "Lakshadweep": 41,
+        "Delhi": 40,
+        "Puducherry": 39,
+        "Jammu and Kashmir": 40,
+        "Ladakh": 38
+    },
+    tomato: {
+        "Andhra Pradesh": 30,
+        "Arunachal Pradesh": 28,
+        "Assam": 29,
+        "Bihar": 31,
+        "Chhattisgarh": 30,
+        "Goa": 32,
+        "Gujarat": 31,
+        "Haryana": 30,
+        "Himachal Pradesh": 29,
+        "Jharkhand": 29,
+        "Karnataka": 31,
+        "Kerala": 32,
+        "Madhya Pradesh": 31,
+        "Maharashtra": 32,
+        "Manipur": 29,
+        "Meghalaya": 30,
+        "Mizoram": 28,
+        "Nagaland": 29,
+        "Odisha": 31,
+        "Punjab": 32,
+        "Rajasthan": 30,
+        "Sikkim": 29,
+        "Tamil Nadu": 29,
+        "Telangana": 30,
+        "Tripura": 28,
+        "Uttar Pradesh": 30,
+        "Uttarakhand": 29,
+        "West Bengal": 32,
+        "Andaman and Nicobar Islands": 29,
+        "Chandigarh": 29,
+        "Dadra and Nagar Haveli and Daman and Diu": 30,
+        "Lakshadweep": 31,
+        "Delhi": 30,
+        "Puducherry": 29,
+        "Jammu and Kashmir": 30,
+        "Ladakh": 28
+    }
+};
+
+        // Render the chart with data based on the selected commodity
+        function renderChart() {
+            const queryParams = getQueryParams();
+            const selectedCommodity = queryParams.commodity;
+
+            if (allStatePrices[selectedCommodity]) {
+                const stateNames = Object.keys(allStatePrices[selectedCommodity]);
+                const prices = Object.values(allStatePrices[selectedCommodity]);
+
+                const data = {
+                    labels: stateNames,
+                    datasets: [{
+                        label: selectedCommodity.charAt(0).toUpperCase() + selectedCommodity.slice(1) + ' Price',
+                        data: prices,
+                        borderColor: 'rgba(255, 0, 0, 1)',
+                        borderWidth: 2,
+                        fill: false,
+                        tension: 0.1
+                    }]
+                };
+
+                const ctx = document.getElementById('priceChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: data,
+                    options: {
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'States'
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: 'Price (in Rs)'
+                                }
+                            }
+                        }
+                    }
+                });
+            } else {
+                alert("No data available for the selected commodity.");
+            }
+        }
+
+        // Call the renderChart function when the page loads
+        window.onload = renderChart;
+</script>
+
+</body>
+</html>
